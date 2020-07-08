@@ -82,6 +82,29 @@ bool Game::isBoardFull()
     return false;
 }
 
+bool Game::isEndGame(const char player)
+{
+    if (checkBoard(player))
+    {
+        if (player == 'x')
+        {
+            gameState = State::WinPlayer1;
+        }
+        else
+        {
+            gameState = State::WinPlayer2;
+        }
+        return true;
+    }
+    if (isBoardFull())
+    {
+        gameState = State::Draw;
+        return true;
+    }
+
+    return false;
+}
+
 void Game::creatBoard()
 {
     for (int i = 1; i < 10; i++)
@@ -160,27 +183,12 @@ void Game::start()
     while (gameState == State::Running)
     {
         playerMove("Player1:", player1);
-        if (checkBoard(player1))
-        {
-            gameState = State::WinPlayer1;
+        if (isEndGame(player1))
             break;
-        }
-        if (isBoardFull())
-        {
-            gameState = State::Draw;
-            break;
-        }
 
         playerMove("Player2:", player2);
-        if (checkBoard(player2))
-        {
-            gameState = State::WinPlayer2;
+        if (isEndGame(player2))
             break;
-        }
-        if (isBoardFull())
-        {
-            gameState = State::Draw;
-        }
     }
 
     printResult();

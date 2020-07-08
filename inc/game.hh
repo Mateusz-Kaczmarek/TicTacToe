@@ -25,6 +25,7 @@ public:
     bool markField(int, char);
     bool checkBoard(char);
     bool isBoardFull();
+    bool isEndGame(char);
     void creatBoard();
     void printResult();
     void playerMove(std::string, char);
