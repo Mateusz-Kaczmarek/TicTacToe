@@ -23,8 +23,10 @@ public:
     void printBoard();
     char printMark(const int);
     bool markField(int, char);
-    void checkBoard();
+    bool checkBoard(char);
+    bool isBoardFull();
     void creatBoard();
+    void printResult();
     void playerMove(std::string, char);
     void start();
 

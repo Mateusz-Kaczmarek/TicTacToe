@@ -4,20 +4,6 @@
 #include "../inc/game.hh"
 using std::cin;
 using std::cout;
-// struct Field
-// {
-//     int number;
-//     char mark;
-//     bool isMarked;
-// };
-
-// enum class State
-// {
-//     WinPlayer1,
-//     WinPlayer2,
-//     Draw,
-//     Running,
-// };
 
 char Game::printMark(const int number)
 {
@@ -58,9 +44,42 @@ bool Game::markField(int number, char playerMark)
     }
 }
 
-void Game::checkBoard()
+bool Game::checkBoard(char player)
 {
-    
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[i].mark == player and board[i + 3].mark == player and board[i + 6].mark == player)
+        {
+            return true;
+        }
+
+        int j = i * 3;
+        if (board[j].mark == player and board[j + 1].mark == player and board[j + 2].mark == player)
+        {
+            return true;
+        }
+    }
+
+    if (board[0].mark == player and board[4].mark == player and board[8].mark == player)
+    {
+        return true;
+    }
+    else if (board[2].mark == player and board[4].mark == player and board[6].mark == player)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool Game::isBoardFull()
+{
+    int emptyFileds = std::count_if(board.begin(), board.end(), [](Field &f) { return f.mark == '.'; });
+
+    if (0 == emptyFileds)
+        return true;
+
+    return false;
 }
 
 void Game::creatBoard()
@@ -110,6 +129,23 @@ void Game::playerMove(std::string str, char player)
     }
 }
 
+void Game::printResult()
+{
+    switch (gameState)
+    {
+    case State::Draw:
+        cout << "No one won is a DRAW\n";
+        break;
+    case State::WinPlayer1:
+        cout << "Player1 won, Congratulations!!!!\n";
+        break;
+    case State::WinPlayer2:
+        cout << "Player2 won, Congratulations!!!!\n";
+        break;
+    default:
+        "Something went wrong :(\n";
+    }
+}
 void Game::start()
 {
     creatBoard();
@@ -124,16 +160,28 @@ void Game::start()
     while (gameState == State::Running)
     {
         playerMove("Player1:", player1);
-        playerMove("Player2:", player2);
-    }
-}
+        if (checkBoard(player1))
+        {
+            gameState = State::WinPlayer1;
+            break;
+        }
+        if (isBoardFull())
+        {
+            gameState = State::Draw;
+            break;
+        }
 
-// class Game
-// {
-// public:
-// private:
-//     std::vector<Field> board;
-//     char player1 = 'x';
-//     char player2 = 'o';
-//     State gameState;
-// };
+        playerMove("Player2:", player2);
+        if (checkBoard(player2))
+        {
+            gameState = State::WinPlayer2;
+            break;
+        }
+        if (isBoardFull())
+        {
+            gameState = State::Draw;
+        }
+    }
+
+    printResult();
+}

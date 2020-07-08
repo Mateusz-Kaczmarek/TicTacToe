@@ -1,2 +1,2 @@
 all:
-	g++ -pthread *.cpp src/*.cpp -o out -std=c++17
+	g++ *.cpp src/*.cpp -o out -std=c++17
